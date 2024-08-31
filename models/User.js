@@ -1,5 +1,4 @@
 const { Schema, Types } = require('mongoose');
-const thoughtSchema = require('./Thought')
 
 const userSchema = new Schema(
     {
@@ -17,13 +16,13 @@ const userSchema = new Schema(
         },
         thoughts: [
             {
-                type: Schema.Types.ObjectId,
+                type: Types.ObjectId,
                 ref: 'Thought'
             }
         ],
         friends: [
             {
-                type: Schema.Types.ObjectId,
+                type: Types.ObjectId,
                 ref: 'User'
             }
         ],
@@ -31,3 +30,5 @@ const userSchema = new Schema(
 
     }
 )
+
+//friend count virtual!!

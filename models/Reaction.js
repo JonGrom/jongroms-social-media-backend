@@ -1,7 +1,25 @@
-//Schema only???
-//reactionId (use Mongoose's ObjectId date type, default value is set to a new ObjectId)
-//reactionBody string, required, 280 character max
-//username: string, required
-//createdAt: date, default current, getter method
+const { Schema, Types } = require('mongoose');
 
-//schema settings: Not a model, a subdocument... 
+const thoughtSchema = new Schema(
+    {
+        _id: {
+            type: Types.ObjectId
+        },
+        text: {
+            type: String,
+            required: true,
+            minLength: [1, 'No text provided'],
+            maxLength: [280, '280 character limit exceeded! {VALUE} characters']
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+            //need getter for formatting
+        },
+    }
+)
+
