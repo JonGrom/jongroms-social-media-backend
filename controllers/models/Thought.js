@@ -1,6 +1,6 @@
 const { Schema, Types } = require('mongoose');
 
-const thoughtSchema = new Schema(
+const Thought = new Schema(
     {
         thoughtText: {
             type: String,
@@ -26,6 +26,6 @@ const thoughtSchema = new Schema(
     }
 )
 
-module.exports = { thoughtSchema }
+module.exports = { Thought }
 //reaction count virtual
 //settings: reactionCount and reactions array virtuals
