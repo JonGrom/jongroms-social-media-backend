@@ -1,8 +1,33 @@
-// Username: string, unique, required, trimmed
-// Email: string, required, unique, valid (mongoose matching validation)
-//thoughts [_id... (referencing Thought)]
+const { Schema, Types } = require('mongoose');
+const thoughtSchema = require('./Thought')
 
-//friends [_id.. (referencing User)]
+const userSchema = new Schema(
+    {
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true
+        },
+        email: {
+            type: String, 
+            required: true,
+            unique: true,
+            match: [/.+\@.+\..+/, 'Not a valid email address']
+        },
+        thoughts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Thought'
+            }
+        ],
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        ],
 
-//Settings
-//friendCount and friends array virtuals
+
+    }
+)
