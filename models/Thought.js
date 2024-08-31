@@ -1,8 +1,8 @@
-const { Schema, Types } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const Thought = new Schema(
+const thoughtSchema = new Schema(
     {
-        thoughtText: {
+        text: {
             type: String,
             required: true,
             minLength: [1, 'No text provided'],
@@ -17,14 +17,20 @@ const Thought = new Schema(
             type: String,
             required: true
         },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
         reactions: [
             {
-                type: Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'Reaction'
             }
         ]
     }
 )
+
+const Thought = model('Thought', thoughtSchema)
 
 module.exports = { Thought }
 //reaction count virtual

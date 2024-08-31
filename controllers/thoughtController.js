@@ -1,10 +1,12 @@
-const { User, Thought, Reaction } = require('../models')
+const { Thought } = require('../models/Thought')
+const { Reaction } = require('../models/Reaction')
+const { User } = require('../models/User') //?
 
 module.exports = {
     //get all thoughts
     async getThoughts(req, res) {
         try {
-          const thoughts = await Thought.find().populate('thoughts');
+          const thoughts = await Thought.find().populate('reactions');
           res.json(thoughts);
         } catch (err) {
           res.status(500).json(err);
@@ -13,7 +15,7 @@ module.exports = {
     //get a thought
     async getSingleThought(req, res){
         try {
-            const thought = await Thought.findOne({_id: req.params.thoughtId}).populate('thoughts')
+            const thought = await Thought.findOne({_id: req.params.thoughtId}).populate('reactions')
             if(!thought){
                 return res.status(404).json({ message: 'thought not found'});
             }
@@ -58,7 +60,7 @@ module.exports = {
           }
     
           await Reaction.deleteMany({ _id: { $in: thought.thoughts } });
-          res.json({ message: 'thought and thoughts deleted!' });
+          res.json({ message: 'thought and reactions deleted!' });
         } catch (err) {
           res.status(500).json(err);
         }
