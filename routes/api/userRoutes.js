@@ -6,7 +6,7 @@ const router = require('express').Router();
 router.route('/').get().post();
 
 // /api/users/:userId
-router.route('/:userId').get().delete().update()
+router.route('/:userId').get().delete().put()
 
 // /api/users/:userId/friends
 router.route('/:userId/friends').post();

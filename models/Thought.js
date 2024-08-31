@@ -26,5 +26,6 @@ const thoughtSchema = new Schema(
     }
 )
 
+module.exports = { thoughtSchema }
 //reaction count virtual
 //settings: reactionCount and reactions array virtuals

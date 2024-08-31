@@ -6,7 +6,7 @@ const router = require('express').Router();
 router.route('/').get().post();
 
 // /api/thoughts/:thoughtId
-router.route('/:thoughtId').get().delete().update()
+router.route('/:thoughtId').get().delete().put()
 
 // /api/thoughts/:thoughtId/reactions
 router.route('/:thoughtId/reactions').post();

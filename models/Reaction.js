@@ -1,6 +1,6 @@
 const { Schema, Types } = require('mongoose');
 
-const thoughtSchema = new Schema(
+const reactionSchema = new Schema(
     {
         _id: {
             type: Types.ObjectId
@@ -22,4 +22,6 @@ const thoughtSchema = new Schema(
         },
     }
 )
+
+module.exports = { reactionSchema }
 

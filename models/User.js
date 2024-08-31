@@ -31,4 +31,5 @@ const userSchema = new Schema(
     }
 )
 
+module.exports = { userSchema }
 //friend count virtual!!
