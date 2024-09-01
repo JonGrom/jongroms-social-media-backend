@@ -32,11 +32,6 @@ const thoughtSchema = new Schema(
     }
 )
 
-function formattedDate(date){
-    //2024-09-01T17:46:21.176Z normal format
-
-}
-
 thoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions ? this.reactions.length : 0
 })
@@ -44,5 +39,3 @@ thoughtSchema.virtual('reactionCount').get(function () {
 const Thought = model('Thought', thoughtSchema)
 
 module.exports = { Thought }
-//reaction count virtual
-//settings: reactionCount and reactions array virtuals
