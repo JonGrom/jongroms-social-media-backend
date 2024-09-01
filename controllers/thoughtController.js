@@ -1,6 +1,6 @@
 const { Thought } = require('../models/Thought')
 const { Reaction } = require('../models/Reaction')
-const { User } = require('../models/User') //?
+const { User } = require('../models/User')
 
 module.exports = {
     //get all thoughts
@@ -27,15 +27,14 @@ module.exports = {
     //create thought
     async createThought(req, res) {
         const user = await User.findOne({username: req.body.username})
-        console.log(user)
         try{
           const thought = await Thought.create(req.body);
-          res.json(thought);
           const user = await User.findOneAndUpdate(
             { username: req.body.username },
             { $addToSet: { thoughts: thought._id } },
             { new: true }
           )
+          res.json(`${user.username} thinks: ${thought.text}`);
         } catch (err) {
           console.log(err);
           return res.status(500).json(err);
@@ -80,6 +79,33 @@ module.exports = {
           res.status(500).json(err);
         }
     },
-    
-
+    // create reaction
+    async createReaction(req, res){
+      try{
+        const reaction = await Reaction.create(req.body);
+        const thought = await Thought.findOneAndUpdate(
+          { _id: req.params.thoughtId },
+          { $addToSet: { reactions: reaction._id } },
+          { new: true }
+        )
+        res.json(`${reaction.username} adds: ${reaction.text}` );
+      } catch(err){
+        res.status(500).json(err);
+      }
+    },
+    //delete reaction
+    async deleteReaction(req, res){
+      try {
+        const reaction = await Reaction.findOneAndDelete({ _id: req.params.thoughtId });
+  
+        const thought = await Thought.findOneAndUpdate(
+          { reactions: req.params.reactionId },
+          { $pull: { reactions: req.params.reactionId } },
+          { new: true }
+        )
+      } catch (err) {
+        res.status(500).json(err);
+        console.log(err)  
+      }
+    }
 }
