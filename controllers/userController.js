@@ -76,13 +76,22 @@ module.exports = {
           { $addToSet: { friends: req.params.userId } },
           { new: true }
         )
-        console.log(friend)
-        await User.findOneAndUpdate(
+
+        if (!friend) {
+          res.status(404).json({ message: 'No user with this username!' });
+        }
+
+        const user = await User.findOneAndUpdate(
           { _id: req.params.userId },
           { $addToSet: { friends: friend._id}},
           { new: true }
         )
-        res.json( {message: 'friend added'})
+
+        if (!user) {
+          res.status(404).json({ message: 'No user with this id!' });
+        }
+
+        res.json( {message: `${user.username} and ${friend.username} are now friends!`})
       } catch(err){
         console.log(err)
         res.status(500).json(err);
