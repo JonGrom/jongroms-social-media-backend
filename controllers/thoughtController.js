@@ -26,14 +26,22 @@ module.exports = {
     },
     //create thought
     async createThought(req, res) {
-        try {
+        const user = await User.findOne({username: req.body.username})
+        console.log(user)
+        try{
           const thought = await Thought.create(req.body);
           res.json(thought);
+          const user = await User.findOneAndUpdate(
+            { username: req.body.username },
+            { $addToSet: { thoughts: thought._id } },
+            { new: true }
+          )
         } catch (err) {
           console.log(err);
           return res.status(500).json(err);
         }
     },
+    //update a thought
     async updateThought(req,res){
         try {
             const thought = await Thought.findOneAndUpdate(
@@ -51,6 +59,7 @@ module.exports = {
             res.status(500).json(err);
           }
     },
+    //delete a thought
     async deleteThought(req, res) {
         try {
           const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
@@ -61,8 +70,16 @@ module.exports = {
     
           await Reaction.deleteMany({ _id: { $in: thought.thoughts } });
           res.json({ message: 'thought and reactions deleted!' });
+
+          const user = await User.findOneAndUpdate(
+            { thoughts: req.params.thoughtId },
+            { $pull: { thoughts: req.params.thoughtId } },
+            { new: true }
+          )
         } catch (err) {
           res.status(500).json(err);
         }
     },
+    
+
 }
