@@ -1,12 +1,11 @@
 const { Thought } = require('../models/Thought')
-const { Reaction } = require('../models/Reaction')
 const { User } = require('../models/User')
 
 module.exports = {
     //get all thoughts
     async getThoughts(req, res) {
         try {
-          const thoughts = await Thought.find().populate('reactions', 'text');
+          const thoughts = await Thought.find().populate('reactions');
           res.json(thoughts);
         } catch (err) {
           res.status(500).json(err);
@@ -66,9 +65,6 @@ module.exports = {
           if (!thought) {
             res.status(404).json({ message: 'thought not found' });
           }
-    
-          await Reaction.deleteMany({ _id: { $in: thought.thoughts } });
-          res.json({ message: 'thought and reactions deleted!' });
 
           const user = await User.findOneAndUpdate(
             { thoughts: req.params.thoughtId },
@@ -82,13 +78,12 @@ module.exports = {
     // create reaction
     async createReaction(req, res){
       try{
-        const reaction = await Reaction.create(req.body);
         const thought = await Thought.findOneAndUpdate(
           { _id: req.params.thoughtId },
-          { $addToSet: { reactions: reaction._id } },
+          { $addToSet: { reactions: req.body } },
           { new: true }
         )
-        res.json(`${reaction.username} adds: ${reaction.text}` );
+        res.json(`${req.body.username} adds: ${req.body.text}` );
       } catch(err){
         res.status(500).json(err);
       }
@@ -96,17 +91,13 @@ module.exports = {
     //delete reaction
     async deleteReaction(req, res){
       try {
-        const reaction = await Reaction.findOneAndDelete({ _id: req.params.thoughtId });
-
         const thought = await Thought.findOneAndUpdate(
           { reactions: req.params.reactionId },
-          { $pull: { reactions: req.params.reactionId } },
+          { $pull: { reactions: { reactionId: req.params.reactionId } } },
           { new: true }
         )
         res.json('reaction deleted!')
-        
-
-
+      
       } catch (err) {
         res.status(500).json(err);
         console.log(err)  

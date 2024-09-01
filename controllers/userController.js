@@ -65,7 +65,7 @@ module.exports = {
           res.json({ message: `${user.username} and thoughts deleted!` });
         } catch (err) {
           res.status(500).json(err);
-        } //might need to update to delete reactions as well? And remove from "friends" of other users
+        }
         
     },
     //add a friend

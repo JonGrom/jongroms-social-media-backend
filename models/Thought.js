@@ -1,5 +1,29 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 const dayjs = require('dayjs')
+
+const reactionSchema = new Schema(
+    {
+        _id: {
+            type: Types.ObjectId,
+            default: Types.ObjectId
+        },
+        text: {
+            type: String,
+            required: true,
+            minLength: [1, 'No text provided'],
+            maxLength: [280, '280 character limit exceeded! {VALUE} characters']
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+            //need getter for formatting
+        },
+    }
+)
 
 const thoughtSchema = new Schema(
     {
@@ -17,12 +41,7 @@ const thoughtSchema = new Schema(
             type: String,
             required: true
         },
-        reactions: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Reaction'
-            }
-        ]
+        reactions: [reactionSchema]
     },
     {
         toJSON: {
