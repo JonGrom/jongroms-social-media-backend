@@ -4,7 +4,7 @@ module.exports = {
     //get all users
     async getUsers(req, res) {
         try {
-          const users = await User.find().populate('thoughts', 'text').populate('friends', 'username');
+          const users = await User.find().populate('thoughts', 'text').populate('friends');
           res.json(users);
         } catch (err) {
           console.log(err)
@@ -14,7 +14,8 @@ module.exports = {
     //get a user
     async getSingleUser(req, res){
         try {
-            const user = await User.findOne({_id: req.params.userId}).populate('thoughts', 'text').populate('friends', 'username')
+            const user = await User.findOne({_id: req.params.userId})
+            .populate('thoughts', 'text').populate('friends')
             if(!user){
                 return res.status(404).json({ message: 'User not found'});
             }
@@ -60,8 +61,8 @@ module.exports = {
             res.status(404).json({ message: 'User not found' });
           }
     
-          await Thought.deleteMany({ _id: { $in: user.thoughts } });
-          res.json({ message: 'user and thoughts deleted!' });
+          const thoughts = await Thought.deleteMany({ _id: { $in: user.thoughts } });
+          res.json({ message: `${user.username} and thoughts deleted!` });
         } catch (err) {
           res.status(500).json(err);
         } //might need to update to delete reactions as well? And remove from "friends" of other users

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const dayjs = require('dayjs')
 
 const thoughtSchema = new Schema(
     {
@@ -9,17 +10,12 @@ const thoughtSchema = new Schema(
             maxLength: [280, '280 character limit exceeded! {VALUE} characters']
         },
         createdAt: {
-            type: Date,
-            default: Date.now
-            //need getter for formatting
+            type: String,
+            default: dayjs()
         },
         username: {
             type: String,
             required: true
-        },
-        userId: {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
         },
         reactions: [
             {
@@ -27,8 +23,23 @@ const thoughtSchema = new Schema(
                 ref: 'Reaction'
             }
         ]
+    },
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        id: false
     }
 )
+
+function formattedDate(date){
+    //2024-09-01T17:46:21.176Z normal format
+
+}
+
+thoughtSchema.virtual('reactionCount').get(function () {
+    return this.reactions ? this.reactions.length : 0
+})
 
 const Thought = model('Thought', thoughtSchema)
 

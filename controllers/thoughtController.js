@@ -15,7 +15,7 @@ module.exports = {
     //get a thought
     async getSingleThought(req, res){
         try {
-            const thought = await Thought.findOne({_id: req.params.thoughtId}).populate('reactions', 'text')
+            const thought = await Thought.findOne({_id: req.params.thoughtId}).populate('reactions')
             if(!thought){
                 return res.status(404).json({ message: 'thought not found'});
             }
