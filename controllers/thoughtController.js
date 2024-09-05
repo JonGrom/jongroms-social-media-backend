@@ -61,16 +61,13 @@ module.exports = {
     async deleteThought(req, res) {
         try {
           const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
-    
-          if (!thought) {
-            res.status(404).json({ message: 'thought not found' });
-          }
 
           const user = await User.findOneAndUpdate(
             { thoughts: req.params.thoughtId },
             { $pull: { thoughts: req.params.thoughtId } },
             { new: true }
           )
+          res.status(200).json('thought deleted')
         } catch (err) {
           res.status(500).json(err);
         }
@@ -88,15 +85,18 @@ module.exports = {
         res.status(500).json(err);
       }
     },
-    //delete reaction
+    // delete reaction
     async deleteReaction(req, res){
       try {
+        
         const thought = await Thought.findOneAndUpdate(
-          { _id: req.params.thoughtId, 'reaction.reactionId': req.params.reactionId },
-          { $pull: { reactions: { reactionId: req.params.reactionId } } },
+          { _id: req.params.thoughtId, "reactions._id": req.params.reactionId },
+          { $pull: { reactions: { _id: req.params.reactionId } } },
           { new: true }
         )
-        res.json('reaction deleted!')
+
+        console.log(thought)
+        res.json(`reaction deleted!`)
       
       } catch (err) {
         res.status(500).json(err);

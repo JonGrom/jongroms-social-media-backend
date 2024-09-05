@@ -19,9 +19,14 @@ const reactionSchema = new Schema(
         },
         createdAt: {
             type: Date,
-            default: Date.now
-            //need getter for formatting
+            default: new Date,
+            get: getDate
         },
+    },
+    {
+        toJSON: {
+            getters: true
+        }
     }
 )
 
@@ -34,8 +39,9 @@ const thoughtSchema = new Schema(
             maxLength: [280, '280 character limit exceeded! {VALUE} characters']
         },
         createdAt: {
-            type: String,
-            default: dayjs()
+            type: Date,
+            default: new Date,
+            get: getDate
         },
         username: {
             type: String,
@@ -46,6 +52,7 @@ const thoughtSchema = new Schema(
     {
         toJSON: {
             virtuals: true,
+            getters: true
         },
         id: false
     }
@@ -54,6 +61,11 @@ const thoughtSchema = new Schema(
 thoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions ? this.reactions.length : 0
 })
+
+function getDate(date){
+    const formattedDate = dayjs(date).format('MMM/D/YYYY h:ma')
+    return formattedDate
+}
 
 const Thought = model('Thought', thoughtSchema)
 
